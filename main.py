@@ -40,6 +40,6 @@ random.shuffle(total)
 
 password = ""
 for x in total:
-password = password + x
+		password = password + x
 		
 print(password)
