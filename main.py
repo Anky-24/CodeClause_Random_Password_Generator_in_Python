@@ -1,12 +1,6 @@
 import random
 import array
 
-# maximum length of password needed
-# this can be changed to suit your password length
-MAX_LEN = 12
-
-# declare arrays of the character that we need in out password
-# Represented as chars to enable easy string concatenation
 DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 LOCASE_CHARACTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
 					'i', 'j', 'k', 'm', 'n', 'o', 'p', 'q',
@@ -21,39 +15,31 @@ UPCASE_CHARACTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
 SYMBOLS = ['@', '#', '$', '%', '=', ':', '?', '.', '/', '|', '~', '>',
 		'*', '(', ')', '<']
 
-# combines all the character arrays above to form one array
 COMBINED_LIST = DIGITS + UPCASE_CHARACTERS + LOCASE_CHARACTERS + SYMBOLS
 
-# randomly select at least one character from each character set above
-rand_digit = random.choice(DIGITS)
-rand_upper = random.choice(UPCASE_CHARACTERS)
-rand_lower = random.choice(LOCASE_CHARACTERS)
-rand_symbol = random.choice(SYMBOLS)
+def getChars(prompt, choices):
+  global MAX_LEN
+  n = int(input(prompt))
+  if(MAX_LEN < 0):
+    print("Can't have this many characters as MAX Length is only", MAX_LEN)
+    return
+  MAX_LEN = MAX_LEN - n
+  arr = [random.choice(choices) for _ in range(n)]
+  return arr
 
-# combine the character randomly selected above
-# at this stage, the password contains only 4 characters but
-# we want a 12-character password
-temp_pass = rand_digit + rand_upper + rand_lower + rand_symbol
+MAX_LEN = int(input("Enter the length of the password."))
 
+digits = getChars("How many digits do you want in the password: ", DIGITS)
+upper = getChars("How many upper case chars do you want in the password: ", UPCASE_CHARACTERS)
+lower = getChars("How many lower case chars do you want in the password: ", LOCASE_CHARACTERS)
+symbols = getChars("How many symbols do you want in the password: ", SYMBOLS)
+remains = [random.choice(COMBINED_LIST) for _ in range(MAX_LEN)]
 
-# now that we are sure we have at least one character from each
-# set of characters, we fill the rest of
-# the password length by selecting randomly from the combined
-# list of character above.
-for x in range(MAX_LEN - 4):
-	temp_pass = temp_pass + random.choice(COMBINED_LIST)
+total = digits + upper + lower + symbols + remains
+random.shuffle(total)
 
-	# convert temporary password into array and shuffle to
-	# prevent it from having a consistent pattern
-	# where the beginning of the password is predictable
-	temp_pass_list = array.array('u', temp_pass)
-	random.shuffle(temp_pass_list)
-
-# traverse the temporary password array and append the chars
-# to form the password
 password = ""
-for x in temp_pass_list:
-		password = password + x
+for x in total:
+password = password + x
 		
-# print out password
 print(password)
